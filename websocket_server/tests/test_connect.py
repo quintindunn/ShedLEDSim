@@ -17,6 +17,10 @@ class TestConnection(TestCase):
         ws = websocket.WebSocket(debug=True)
         ws.connect("ws://127.0.0.1:9090")
 
+        confirmation = json.loads(ws.recv())
+
+        self.assertEqual(confirmation['type'], "connection-confirmed")
+
         # Generate the message
         msg = f"Test {str(uuid.uuid4())}"
 

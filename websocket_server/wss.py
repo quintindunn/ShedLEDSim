@@ -7,6 +7,7 @@ import aiohttp
 from aiohttp import web
 from aiohttp.http_websocket import WSMessage
 
+from handlers import echo_handler
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +17,7 @@ def message_handler(msg: WSMessage) -> dict:
 
     match data['type']:
         case "echo":
-            logger.info(f"Echo: `{data['content']}`")
-            return {
-                "type": "echo",
-                "content": data['content']
-            }
+            return echo_handler(msg=msg)
 
 
 async def websocket_handler(request):
@@ -35,7 +32,7 @@ async def websocket_handler(request):
 
     # Send connection confirmed message.
     await ws.send_str(json.dumps({
-        "type": "connection_confirmed",
+        "type": "connection-confirmed",
         "content": "Connection confirmed!"
     }))
 
