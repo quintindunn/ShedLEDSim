@@ -33,6 +33,12 @@ async def websocket_handler(request):
 
     logging.info(f"New client.")
 
+    # Send connection confirmed message.
+    await ws.send_str(json.dumps({
+        "type": "connection_confirmed",
+        "content": "Connection confirmed!"
+    }))
+
     # While the socket is alive, listen for messages.
     async for msg in ws:
         # Type-hinting for development.

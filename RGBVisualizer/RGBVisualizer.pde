@@ -13,8 +13,15 @@ final int Y_INC = 12;
 final int X_PAD = 20;
 final int Y_PAD = 20;
 
+// Websocket config
+final String ws_host = "127.0.0.1";
+final int ws_port = 9090;
+
 
 RGB[] leds = new RGB[LED_COUNT];
+
+LEDUpdater updater;
+
 
 // Calculates the width of the window determined by the setup constants.
 int calculate_win_width() {
@@ -50,7 +57,7 @@ int calculate_win_height() {
 }
 
 // Setup the LEDS, and window.
-void setup() {
+void setup() {  
   RGB STARTCOLOR = new RGB(255, 0, 255);
   
   // Setup window.
@@ -68,6 +75,9 @@ void setup() {
   for (int i = 0; i < LED_COUNT; i++) {
     leds[i] = new RGB(STARTCOLOR.r, STARTCOLOR.g, STARTCOLOR.b); 
   }
+  
+  updater = new LEDUpdater(this, ws_host, ws_port, LED_COUNT);
+  updater.init();
 }
 
 void draw_leds() {
