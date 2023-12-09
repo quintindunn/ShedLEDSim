@@ -8,6 +8,7 @@ class Client:
         self.request = request
         self.led_strip: LEDStrip | None = None
         self.uuid = str(uuid.uuid4())
+        self.led_mode: str | None = None
 
 
 class LEDStrip:

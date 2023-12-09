@@ -40,6 +40,14 @@ class LEDUpdater {
     ws.sendMessage(update_msg.toString());
   }
   
+  void update_mode(String new_mode) {
+    JSONObject mode_msg = new JSONObject();
+    mode_msg.setString("type", "update-mode");
+    mode_msg.setString("content", new_mode);
+    
+    ws.sendMessage(mode_msg.toString());
+  }
+  
   void led_dump_handler(JSONObject message) {
     // Parses the JSON sent and converts it into a RGB array.
     JSONArray raw_LEDs = parseJSONArray(message.getString("content"));

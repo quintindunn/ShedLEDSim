@@ -4,6 +4,7 @@ import logging
 from aiohttp.http_websocket import WSMessage
 
 from structures import Client, LEDStrip
+from modes import MODES
 
 logger = logging.getLogger("handlers.py")
 
@@ -49,9 +50,36 @@ def dump_led_handler(client: Client):
     :return:
     """
 
-    logger.info(f"Dumping LEDs to client {client.uuid}")
+    logger.debug(f"Dumping LEDs to client {client.uuid}")
 
     return {
         "type": "led-dump",
         "content": f"{str(client.led_strip)}"
+    }
+
+
+def update_mode_handler(msg: WSMessage, client: Client):
+    """
+    Updates the LED mode the client is using.
+    :param msg: Message sent from client.
+    :param client: Client object.
+    :return:
+    """
+
+    data = json.loads(msg.data)
+
+    client_mode = data['content']
+    logger.info(f"Setting client {client.uuid} mode to {client_mode}")
+
+    for mode, mode_class in MODES.items():
+        if client_mode == mode:
+            client.led_mode = mode_class(client.led_strip)
+            client.led_mode.random()
+            break
+    else:
+        client_mode = "MODE_UPDATE_FAILURE"
+
+    return {
+        "type": "mode-update",
+        "content": client_mode
     }

@@ -1,3 +1,6 @@
+// LED Modes:
+final String[] modes = {"random", "placeholder1", "placeholder2"};
+
 // How many LEDs
 final int LED_COUNT = 900;
 
@@ -114,4 +117,18 @@ void draw() {
 
 void webSocketEvent(String msg) {
   updater.message_handler(msg);  
+}
+
+void keyPressed() {
+  int max_num = modes.length - 1;
+  // Starts at 48
+  int idx = keyCode-49;
+  if (idx < 0 || idx > max_num)
+  {
+    println("Not in range.");
+    return;
+  }
+  
+  // Send mode to updater.
+  updater.update_mode(modes[idx]);
 }
