@@ -76,8 +76,10 @@ void setup() {
     leds[i] = new RGB(STARTCOLOR.r, STARTCOLOR.g, STARTCOLOR.b); 
   }
   
-  updater = new LEDUpdater(this, ws_host, ws_port, LED_COUNT);
+  updater = new LEDUpdater(this, ws_host, ws_port, leds);
   updater.init();
+  
+  updater.update_leds();
 }
 
 void draw_leds() {
@@ -116,6 +118,11 @@ void random_leds() {
 void draw() {
   background(200, 200, 200);  // Make background white.
   draw_leds();
-  random_leds();
-  delay(1000);
+  updater.update_leds();
+  delay(100);
+}
+
+
+void webSocketEvent(String msg) {
+  updater.message_handler(msg);  
 }

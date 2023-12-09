@@ -8,10 +8,15 @@ class LEDUpdater {
   
   int led_count;
   
-  public LEDUpdater(PApplet parent, String host, int port, int led_count) {
+  RGB[] LEDs;
+  
+  public LEDUpdater(PApplet parent, String host, int port, RGB[] LEDs) {
     this.host = host;
     this.port = port;
-    this.led_count = led_count;
+    
+    this.LEDs = LEDs;
+    this.led_count = LEDs.length;
+    
     
     ws = new WebsocketClient(parent, "ws://" + host + ":" + port);  
   }
@@ -24,5 +29,55 @@ class LEDUpdater {
     
     ws.sendMessage(init_msg.toString());
   }
+  
+  void update_leds() {
+    JSONObject update_msg = new JSONObject();
+    
+    update_msg.setString("type", "dump-leds");
+    
+    ws.sendMessage(update_msg.toString());
+  }
+  
+  void led_dump_handler(JSONObject message) {
+    // Parses the JSON sent and converts it into a RGB array.
+    JSONArray raw_LEDs = parseJSONArray(message.getString("content"));
+    RGB[] LEDs = new RGB[raw_LEDs.size()];
+      
+    for (int i = 0; i < raw_LEDs.size(); i++) {
+        JSONArray LED = raw_LEDs.getJSONArray(i);
+        int[] LED_values = LED.toIntArray();
+ 
+        RGB new_led = new RGB(LED_values[0], LED_values[1], LED_values[2]);
+        LEDs[i] = new_led;
+    }
+    
+    // Copy the local leds array to the global leds array.
+    
+    if (leds.length != this.LEDs.length)
+      println("Error: Length of LEDs recieved != defined LEDs");
+    
+    for (int i = 0; i < leds.length; i++) {
+      this.LEDs[i] = LEDs[i]; 
+    }
+  }
+  
+  void message_handler(String msg) {
+    JSONObject message = parseJSONObject(msg);
+    
+    String msg_type = message.getString("type");
+
+    switch (msg_type) {
+       case "connection-confirmed":
+         System.out.println("Successfully connected to websocket");
+         break;
+       case "led-strip-initialized":
+         System.out.println("Successfully intialized LEDStrip");
+         break;
+       case "led-dump":
+         led_dump_handler(message);
+         break;
+    }
+}
+
 
 };
