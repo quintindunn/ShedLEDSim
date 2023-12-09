@@ -40,3 +40,18 @@ def setup_led_count_handler(msg: WSMessage, client: Client):
         "type": "led-strip-initialized",
         "content": f"200,{count}"
     }
+
+
+def dump_led_handler(client: Client):
+    """
+    Returns an Array of the LEDs
+    :param client: Client object.
+    :return:
+    """
+
+    logger.info(f"Dumping LEDs to client {client.uuid}")
+
+    return {
+        "type": "led-dump",
+        "content": f"{str(client.led_strip)}"
+    }

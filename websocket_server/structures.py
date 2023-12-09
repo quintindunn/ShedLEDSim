@@ -14,6 +14,9 @@ class LEDStrip:
     def __init__(self, led_count: int):
         self.leds = [LED(0, 0, 0) for _ in range(led_count)]
 
+    def __str__(self):
+        return str(self.leds)
+
 
 class LED:
     def __init__(self, red: int, green: int, blue: int):
@@ -32,3 +35,8 @@ class LED:
     @property
     def b(self):
         return self.blue
+
+    def __str__(self):
+        return f"[{self.red},{self.green},{self.blue}]"
+
+    __repr__ = __str__
