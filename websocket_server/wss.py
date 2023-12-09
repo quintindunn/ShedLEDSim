@@ -7,26 +7,34 @@ import aiohttp
 from aiohttp import web
 from aiohttp.http_websocket import WSMessage
 
-from handlers import echo_handler
+from handlers import echo_handler, setup_led_count_handler
+
+from structures import Client
 
 logger = logging.getLogger(__name__)
 
+clients = []
 
-def message_handler(msg: WSMessage) -> dict:
+
+def message_handler(msg: WSMessage, client: Client) -> dict:
     data = json.loads(msg.data)
 
     match data['type']:
         case "echo":
             return echo_handler(msg=msg)
+        case "setup-led-count":
+            return setup_led_count_handler(msg=msg, client=client)
 
 
 async def websocket_handler(request):
     """
     Handles new websocket connections.
     """
-
     ws = web.WebSocketResponse()
     await ws.prepare(request)
+
+    client = Client(request)
+    clients.append(client)
 
     logging.info(f"New client.")
 
@@ -49,7 +57,7 @@ async def websocket_handler(request):
             else:
                 # Generate a response packet.
 
-                response = message_handler(msg)
+                response = message_handler(msg=msg, client=client)
                 if response:
                     await ws.send_str(json.dumps(response))
                 else:

@@ -1,3 +1,15 @@
+import uuid
+
+from aiohttp.web_request import Request
+
+
+class Client:
+    def __init__(self, request: Request):
+        self.request = request
+        self.led_strip: LEDStrip | None = None
+        self.uuid = str(uuid.uuid4())
+
+
 class LEDStrip:
     def __init__(self, led_count: int):
         self.leds = [LED(0, 0, 0) for _ in range(led_count)]
