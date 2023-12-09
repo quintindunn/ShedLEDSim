@@ -2,7 +2,7 @@
 final int LED_COUNT = 900;
 
 // Displayed along how many rows
-final int ROWS = 12;
+final int ROWS = 9;
 
 // Size of the LED.
 final int LED_SQ_SIZE = 10;
@@ -17,7 +17,7 @@ final int Y_PAD = 20;
 RGB[] leds = new RGB[LED_COUNT];
 
 // Calculates the width of the window determined by the setup constants.
-int calc_width() {
+int calculate_win_width() {
   int window_width = 0;
   
   int led_per_row = LED_COUNT/ROWS;
@@ -34,7 +34,7 @@ int calc_width() {
   return window_width;
 }
 
-int calc_height() {
+int calculate_win_height() {
   int window_height = 0;
   
   // Add the top & bottom padding
@@ -58,8 +58,8 @@ void setup() {
   windowTitle("LED Simulator V1.0");
 
   // Resize with appropriate sizing.
-  int win_width = calc_width();
-  int win_height = calc_height();
+  int win_width = calculate_win_width();
+  int win_height = calculate_win_height();
   
   windowResize(win_width, win_height);
   
@@ -93,8 +93,19 @@ void draw_leds() {
   }
 }
 
+void random_leds() {
+   for (int i = 0; i < LED_COUNT; i++) {
+      RGB led = leds[i];
+      
+      led.r = (int) (Math.random() * 255);
+      led.g = (int) (Math.random() * 255);
+      led.b = (int) (Math.random() * 255);
+   }
+}
 
 void draw() {
   background(200, 200, 200);  // Make background white.
   draw_leds();
+  random_leds();
+  delay(1000);
 }
