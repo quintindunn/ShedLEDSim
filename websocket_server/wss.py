@@ -33,17 +33,25 @@ async def websocket_handler(request):
 
     logging.info(f"New client.")
 
+    # While the socket is alive, listen for messages.
     async for msg in ws:
-        msg: WSMessage = msg
-        # Get the response of the message.
+        # Type-hinting for development.
+        msg: WSMessage
 
+        # Make sure the message is text, not an error.
         if msg.type == aiohttp.WSMsgType.TEXT:
+            # Check if the packet was to close the connection.
             if msg.data == 'close':
                 await ws.close()
             else:
+                # Generate a response packet.
+
                 response = message_handler(msg)
                 if response:
                     await ws.send_str(json.dumps(response))
+                else:
+                    logger.warning(f"No known response for message, {msg.data[:1000]}")
+
         elif msg.type == aiohttp.WSMsgType.ERROR:
             logger.warning(f'Websocket connection closed with exception {ws.exception()}')
 
