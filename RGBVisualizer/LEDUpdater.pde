@@ -22,6 +22,7 @@ class LEDUpdater {
   }
   
   void init() {
+    // Send a packet to the websocket server containing the amount of LEDs to register.
     JSONObject init_msg = new JSONObject();
     
     init_msg.setString("type", "setup-led-count");
@@ -31,8 +32,9 @@ class LEDUpdater {
   }
   
   void update_leds() {
+    // Sends a packet to the websocket server for it to return all of the LEDs.
+
     JSONObject update_msg = new JSONObject();
-    
     update_msg.setString("type", "dump-leds");
     
     ws.sendMessage(update_msg.toString());
@@ -77,7 +79,5 @@ class LEDUpdater {
          led_dump_handler(message);
          break;
     }
-}
-
-
+  }
 };

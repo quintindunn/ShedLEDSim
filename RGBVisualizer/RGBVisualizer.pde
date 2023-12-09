@@ -78,8 +78,6 @@ void setup() {
   
   updater = new LEDUpdater(this, ws_host, ws_port, leds);
   updater.init();
-  
-  updater.update_leds();
 }
 
 void draw_leds() {
@@ -105,15 +103,6 @@ void draw_leds() {
   }
 }
 
-void random_leds() {
-   for (int i = 0; i < LED_COUNT; i++) {
-      RGB led = leds[i];
-      
-      led.r = (int) (Math.random() * 255);
-      led.g = (int) (Math.random() * 255);
-      led.b = (int) (Math.random() * 255);
-   }
-}
 
 void draw() {
   background(200, 200, 200);  // Make background white.
