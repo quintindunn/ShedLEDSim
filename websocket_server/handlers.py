@@ -74,7 +74,6 @@ def update_mode_handler(msg: WSMessage, client: Client):
     for mode, mode_class in MODES.items():
         if client_mode == mode:
             client.led_mode = mode_class(client.led_strip)
-            client.led_mode.random()
             break
     else:
         client_mode = "MODE_UPDATE_FAILURE"
@@ -82,4 +81,23 @@ def update_mode_handler(msg: WSMessage, client: Client):
     return {
         "type": "mode-update",
         "content": client_mode
+    }
+
+
+def update_display_handler(client: Client):
+    """
+    Updates the display based on the client's current mode.
+    :return:
+    """
+
+    if client.led_mode is None:
+        return {
+            "type": "refresh",
+            "content": "no-mode"
+        }
+
+    client.led_mode.update()
+    return {
+        "type": "refresh",
+        "content": "200"
     }

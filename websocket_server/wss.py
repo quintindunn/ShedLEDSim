@@ -7,7 +7,8 @@ import aiohttp
 from aiohttp import web
 from aiohttp.http_websocket import WSMessage
 
-from handlers import echo_handler, setup_led_count_handler, dump_led_handler, update_mode_handler
+from handlers import echo_handler, setup_led_count_handler, dump_led_handler, update_mode_handler, \
+    update_display_handler
 
 from structures import Client
 
@@ -28,6 +29,8 @@ def message_handler(msg: WSMessage, client: Client) -> dict:
             return dump_led_handler(client=client)
         case "update-mode":
             return update_mode_handler(msg=msg, client=client)
+        case "update-display":
+            return update_display_handler(client=client)
 
 
 async def websocket_handler(request):

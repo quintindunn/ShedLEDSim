@@ -32,6 +32,12 @@ class LEDUpdater {
   }
   
   void update_leds() {
+    JSONObject update_msg = new JSONObject();
+    update_msg.setString("type", "update-display");
+    ws.sendMessage(update_msg.toString());
+  }
+  
+  void update_display() {
     // Sends a packet to the websocket server for it to return all of the LEDs.
 
     JSONObject update_msg = new JSONObject();

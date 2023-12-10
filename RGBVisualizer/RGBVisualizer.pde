@@ -1,5 +1,6 @@
 // LED Modes:
-final String[] modes = {"random", "placeholder1", "placeholder2"};
+final String[] modes = {"random"};
+
 
 // How many LEDs
 final int LED_COUNT = 900;
@@ -20,10 +21,15 @@ final int Y_PAD = 20;
 final String ws_host = "127.0.0.1";
 final int ws_port = 9090;
 
+// Window config.
+final String window_title = "LED Simulator V1.0";
+
+
 
 RGB[] leds = new RGB[LED_COUNT];
 
 LEDUpdater updater;
+
 
 
 // Calculates the width of the window determined by the setup constants.
@@ -65,7 +71,7 @@ void setup() {
   
   // Setup window.
   size(200, 200);
-  windowTitle("LED Simulator V1.0");
+  windowTitle(window_title);
 
   // Resize with appropriate sizing.
   int win_width = calculate_win_width();
@@ -111,6 +117,7 @@ void draw() {
   background(200, 200, 200);  // Make background white.
   draw_leds();
   updater.update_leds();
+  updater.update_display();
   delay(100);
 }
 
@@ -131,4 +138,5 @@ void keyPressed() {
   
   // Send mode to updater.
   updater.update_mode(modes[idx]);
+  windowTitle(window_title + " - " + modes[idx]);
 }

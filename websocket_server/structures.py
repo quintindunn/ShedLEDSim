@@ -2,13 +2,15 @@ import uuid
 
 from aiohttp.web_request import Request
 
+from modes import BaseMode
+
 
 class Client:
     def __init__(self, request: Request):
         self.request = request
         self.led_strip: LEDStrip | None = None
         self.uuid = str(uuid.uuid4())
-        self.led_mode: str | None = None
+        self.led_mode: BaseMode | None = None
 
 
 class LEDStrip:
